@@ -1,6 +1,6 @@
 cask "private-notes" do
   version "0.1.0"
-  sha256 "REPLACE_WITH_ACTUAL_SHA256"
+  sha256 "6a2b1a86896526c9fd257ac0971741578229a48bec553f0bc73a1f89c5aa5e59"
 
   url "https://github.com/adbutler007/private_notes/releases/download/v#{version}/PrivateNotes-#{version}.zip"
   name "Private Notes"
@@ -21,15 +21,22 @@ cask "private-notes" do
       Private Notes installed!
       ====================================
 
-      First-time setup:
+      Downloading AI model (this may take 3-5 minutes for ~4GB)...
+    EOS
 
-      1. Download the LLM model:
-         ollama pull qwen3:4b-instruct
+    # Auto-download the LLM model
+    system_command "/opt/homebrew/bin/ollama",
+                   args: ["pull", "qwen3:4b-instruct"],
+                   print_stdout: true
 
-      2. (Optional) Install BlackHole for Zoom/Teams audio:
-         brew install --cask blackhole-2ch
+    puts <<~EOS
 
-      3. Launch Private Notes from Applications or menu bar
+      ✓ Model download complete!
+
+      Optional: Install BlackHole for Zoom/Teams audio:
+        brew install --cask blackhole-2ch
+
+      Launch Private Notes from Applications or menu bar.
 
       Documentation: https://github.com/adbutler007/private_notes/tree/main/audio_summary_app
     EOS
