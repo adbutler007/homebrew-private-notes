@@ -1,6 +1,6 @@
 cask "private-notes" do
   version "0.1.0"
-  sha256 "aea125fcef60c8481b8408cd9ede9b9843bd68e8e95341fdf777245d3789263f"
+  sha256 "e7b63a2e1f3b9043981240b4a915bcfe3596c25210f6438a440702b09e64d7fa"
 
   url "https://github.com/adbutler007/private_notes/releases/download/v#{version}/PrivateNotes-#{version}.zip"
   name "Private Notes"
