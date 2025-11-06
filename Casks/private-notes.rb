@@ -31,8 +31,35 @@ cask "private-notes" do
 
       ✓ Model download complete!
 
-      Optional: Install BlackHole for Zoom/Teams audio:
-        brew install --cask blackhole-2ch
+    EOS
+
+    # Check if BlackHole is already installed
+    blackhole_installed = system("/opt/homebrew/bin/brew list --cask blackhole-2ch > /dev/null 2>&1")
+
+    if blackhole_installed
+      puts "      ✓ BlackHole already installed"
+    else
+      puts <<~EOS
+
+      BlackHole is recommended for capturing Zoom/Teams audio.
+      Would you like to install it now? (y/N):
+      EOS
+
+      response = $stdin.gets.chomp.downcase
+
+      if response == 'y' || response == 'yes'
+        puts "\n      Installing BlackHole..."
+        system_command "/opt/homebrew/bin/brew",
+                       args: ["install", "--cask", "blackhole-2ch"],
+                       print_stdout: true
+        puts "      ✓ BlackHole installed!"
+      else
+        puts "      Skipping BlackHole installation."
+        puts "      You can install it later with: brew install --cask blackhole-2ch"
+      end
+    end
+
+    puts <<~EOS
 
       Launch Private Notes from Applications or menu bar.
 
@@ -55,7 +82,11 @@ cask "private-notes" do
     - Only summaries and structured data are persisted
     - All AI processing happens on-device (no cloud)
 
-    For Zoom/Teams audio capture, install BlackHole:
-      brew install --cask blackhole-2ch
+    System Audio Setup (for Zoom/Teams):
+    - BlackHole creates a virtual audio device to capture system audio
+    - If not installed during setup, you can install it later:
+        brew install --cask blackhole-2ch
+    - After installing, configure your meeting app to output to "BlackHole 2ch"
+    - Set Private Notes to record from "BlackHole 2ch" in audio settings
   EOS
 end
