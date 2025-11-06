@@ -9,9 +9,7 @@ cask "private-notes" do
 
   depends_on macos: ">= :big_sur"
   depends_on arch: :arm64
-
   depends_on formula: "ollama"
-  depends_on cask: "blackhole-2ch", optional: true
 
   app "Private Notes.app"
 
