@@ -19,6 +19,17 @@ cask "private-notes" do
       Private Notes installed!
       ====================================
 
+      Removing macOS quarantine attribute...
+    EOS
+
+    # Remove quarantine attribute to bypass Gatekeeper (app is not code-signed)
+    system_command "xattr",
+                   args: ["-cr", "#{appdir}/Private Notes.app"],
+                   sudo: true
+
+    puts <<~EOS
+      ✓ Quarantine removed
+
       Downloading AI model (this may take 3-5 minutes for ~4GB)...
     EOS
 
@@ -76,6 +87,9 @@ cask "private-notes" do
   caveats <<~EOS
     Private Notes is a menu bar application.
     Look for the icon in your menu bar after launching.
+
+    Note: This app is not code-signed. Homebrew automatically removes the
+    quarantine attribute during installation to allow it to run.
 
     Privacy Note:
     - Audio and transcripts are NEVER saved to disk
