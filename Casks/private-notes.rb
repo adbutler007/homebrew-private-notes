@@ -24,8 +24,7 @@ cask "private-notes" do
 
     # Remove quarantine attribute to bypass Gatekeeper (app is not code-signed)
     system_command "xattr",
-                   args: ["-cr", "#{appdir}/Private Notes.app"],
-                   sudo: true
+                   args: ["-cr", "#{appdir}/Private Notes.app"]
 
     puts <<~EOS
       ✓ Quarantine removed
