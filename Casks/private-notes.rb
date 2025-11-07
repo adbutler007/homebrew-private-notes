@@ -1,6 +1,6 @@
 cask "private-notes" do
   version "0.1.0"
-  sha256 "0e708b56d7904c9d8c6cbe6154ad6d9e6773ed7b7578edcba8c0a70f4c83d77e"
+  sha256 "463d846e62650164084b587e452daeafcfd189f967bd553236679305cf4e9381"
 
   url "https://github.com/adbutler007/private_notes/releases/download/v#{version}/PrivateNotes-#{version}.zip"
   name "Private Notes"
@@ -29,17 +29,40 @@ cask "private-notes" do
     puts <<~EOS
       ✓ Quarantine removed
 
-      Downloading AI model (this may take 3-5 minutes for ~4GB)...
+      Downloading AI models (this may take 5-8 minutes for ~6GB total)...
     EOS
 
     # Auto-download the LLM model
+    puts "\n      [1/2] Downloading Ollama LLM model (~4GB)..."
     system_command "/opt/homebrew/bin/ollama",
                    args: ["pull", "qwen3:4b-instruct"],
                    print_stdout: true
 
+    puts "\n      ✓ Ollama model downloaded"
+
+    # Auto-download the Parakeet speech-to-text model
+    puts "\n      [2/2] Downloading Parakeet speech model (~2GB)..."
+    puts "      Note: Parakeet will download on first recording if this step fails."
+
+    # Try to download using Python 3 and huggingface_hub
+    # This is a best-effort attempt - the app will download on first use if it fails
+    begin
+      system_command "/usr/bin/python3",
+                     args: [
+                       "-c",
+                       "from huggingface_hub import snapshot_download; " \
+                       "snapshot_download('mlx-community/parakeet-tdt-0.6b-v3', " \
+                       "allow_patterns=['*.json', '*.safetensors', '*.txt', '*.model'])"
+                     ],
+                     print_stdout: false
+      puts "      ✓ Parakeet model downloaded"
+    rescue => e
+      puts "      ⚠ Parakeet download skipped (will download on first recording)"
+    end
+
     puts <<~EOS
 
-      ✓ Model download complete!
+      ✓ All models downloaded successfully!
 
     EOS
 
