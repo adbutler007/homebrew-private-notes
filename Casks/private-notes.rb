@@ -83,22 +83,9 @@ cask "private-notes" do
     else
       puts <<~EOS
 
-      BlackHole is recommended for capturing Zoom/Teams audio.
-      Would you like to install it now? (y/N):
+      Note: BlackHole is recommended for capturing Zoom/Teams audio.
+      Install it separately with: brew install --cask blackhole-2ch
       EOS
-
-      response = $stdin.gets.chomp.downcase
-
-      if response == 'y' || response == 'yes'
-        puts "\n      Installing BlackHole..."
-        system_command "/opt/homebrew/bin/brew",
-                       args: ["install", "--cask", "blackhole-2ch"],
-                       print_stdout: true
-        puts "      ✓ BlackHole installed!"
-      else
-        puts "      Skipping BlackHole installation."
-        puts "      You can install it later with: brew install --cask blackhole-2ch"
-      end
     end
 
     puts <<~EOS
