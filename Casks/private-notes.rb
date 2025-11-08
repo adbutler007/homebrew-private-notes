@@ -34,6 +34,15 @@ cask "private-notes" do
 
     # Auto-download the LLM model
     puts "\n      [1/2] Downloading Ollama LLM model (~4GB)..."
+
+    # Start Ollama service in the background if not already running
+    unless system("pgrep -q ollama")
+      puts "      Starting Ollama service..."
+      system("/opt/homebrew/bin/brew services start ollama > /dev/null 2>&1")
+      sleep 3  # Give Ollama time to start
+    end
+
+    # Download the model
     system_command "/opt/homebrew/bin/ollama",
                    args: ["pull", "qwen3:4b-instruct"],
                    print_stdout: true
