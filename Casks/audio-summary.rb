@@ -24,6 +24,16 @@ cask "audio-summary" do
   app "Audio Summary.app"
 
   postflight do
+    # Optionally remove quarantine to allow launching without notarization.
+    # This is acceptable in a private tap but will be rejected in Homebrew core.
+    # If you prefer to keep quarantine, install with: brew install --cask audio-summary --no-quarantine
+    begin
+      system_command "/usr/bin/xattr",
+                     args: ["-dr", "com.apple.quarantine", "#{appdir}/Audio Summary.app"],
+                     must_succeed: false
+    rescue StandardError
+    end
+
     # Show first-run instructions
     puts <<~EOS
       ====================================
@@ -44,6 +54,16 @@ cask "audio-summary" do
 
       Documentation: https://github.com/adbutler007/private_notes/tree/main/audio_summary_app
     EOS
+  end
+
+  # Also strip quarantine from the staged app before it is moved, to be extra sure
+  preflight do
+    begin
+      system_command "/usr/bin/xattr",
+                     args: ["-dr", "com.apple.quarantine", "#{staged_path}/Audio Summary.app"],
+                     must_succeed: false
+    rescue StandardError
+    end
   end
 
   zap trash: [
@@ -75,5 +95,11 @@ cask "audio-summary" do
 
     For Zoom/Teams audio capture, install BlackHole:
       brew install --cask blackhole-2ch
+
+    If macOS Gatekeeper blocks launch and you intentionally skip notarization,
+    you can install with Homebrew's no-quarantine flag instead:
+      brew reinstall --cask --no-quarantine audio-summary
+    Or remove quarantine manually:
+      xattr -dr com.apple.quarantine "/Applications/Audio Summary.app"
   EOS
 end
